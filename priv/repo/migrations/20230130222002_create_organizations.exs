@@ -1,0 +1,15 @@
+defmodule Repository.Repo.Migrations.CreateOrganizations do
+  use Ecto.Migration
+
+  def change do
+    create table(:organizations) do
+      add :name, :string, null: false
+      add :archived_at, :naive_datetime
+
+      timestamps()
+    end
+
+    create index(:organizations, [:name])
+    create index(:organizations, [:archived_at])
+  end
+end

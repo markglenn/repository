@@ -52,7 +52,8 @@ defmodule Repository.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ex_machina, "~> 2.7.0", only: :test},
-      {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
+      {:phx_live_storybook, github: "phenixdigital/phx_live_storybook", branch: "main"}
     ]
   end
 

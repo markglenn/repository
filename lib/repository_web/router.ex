@@ -1,6 +1,8 @@
 defmodule RepositoryWeb.Router do
   use RepositoryWeb, :router
 
+  import PhxLiveStorybook.Router
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -14,10 +16,23 @@ defmodule RepositoryWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/" do
+    storybook_assets()
+  end
+
   scope "/", RepositoryWeb do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    live "/organizations", OrganizationLive.Index, :index
+    live "/organizations/new", OrganizationLive.Index, :new
+    live "/organizations/:id/edit", OrganizationLive.Index, :edit
+
+    live "/organizations/:id", OrganizationLive.Show, :show
+    live "/organizations/:id/show/edit", OrganizationLive.Show, :edit
+
+    live_storybook("/storybook", backend_module: RepositoryWeb.Storybook)
   end
 
   # Other scopes may use custom stacks.

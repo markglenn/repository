@@ -26,7 +26,8 @@ config :repository, RepositoryWeb.Endpoint,
   secret_key_base: "4JYZgmTTlAvLZ0CYSyKMQIMOdsfAGol40A8v9OPy1iOeJoyIzDOo7/LWYvaBm+nS",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]},
+    storybook_tailwind: {Tailwind, :install_and_run, [:storybook, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -58,7 +59,8 @@ config :repository, RepositoryWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/repository_web/(controllers|live|components)/.*(ex|heex)$"
+      ~r"lib/repository_web/(controllers|live|components)/.*(ex|heex)$",
+      ~r"storybook/.*(exs)$"
     ]
   ]
 
