@@ -18,7 +18,7 @@ defmodule Repository.Accounts do
 
   """
   def list_organizations do
-    Repo.all(Organization)
+    Repo.all(Organization.unarchived())
   end
 
   @doc """
@@ -35,7 +35,7 @@ defmodule Repository.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_organization!(id), do: Repo.get!(Organization, id)
+  def get_organization!(id), do: Repo.get!(Organization.unarchived(), id)
 
   @doc """
   Creates a organization.

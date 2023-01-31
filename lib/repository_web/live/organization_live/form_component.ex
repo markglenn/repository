@@ -21,7 +21,6 @@ defmodule RepositoryWeb.OrganizationLive.FormComponent do
         phx-submit="save"
       >
         <.input field={{f, :name}} type="text" label="Name" />
-        <.input field={{f, :archived_at}} type="datetime-local" label="Archived at" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Organization</.button>
         </:actions>

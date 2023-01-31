@@ -32,6 +32,22 @@ defmodule RepositoryWeb.Router do
     live "/organizations/:id", OrganizationLive.Show, :show
     live "/organizations/:id/show/edit", OrganizationLive.Show, :edit
 
+    scope "/organizations/:organization_id" do
+      live "/inventory_pools", InventoryPoolLive.Index, :index
+      live "/inventory_pools/new", InventoryPoolLive.Index, :new
+      live "/inventory_pools/:id/edit", InventoryPoolLive.Index, :edit
+
+      live "/inventory_pools/:id", InventoryPoolLive.Show, :show
+      live "/inventory_pools/:id/show/edit", InventoryPoolLive.Show, :edit
+
+      live "/item_categories", ItemCategoryLive.Index, :index
+      live "/item_categories/new", ItemCategoryLive.Index, :new
+      live "/item_categories/:id/edit", ItemCategoryLive.Index, :edit
+
+      live "/item_categories/:id", ItemCategoryLive.Show, :show
+      live "/item_categories/:id/show/edit", ItemCategoryLive.Show, :edit
+    end
+
     live_storybook("/storybook", backend_module: RepositoryWeb.Storybook)
   end
 

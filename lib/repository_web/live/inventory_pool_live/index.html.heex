@@ -1,0 +1,51 @@
+<.header>
+  Listing Inventory pools
+  <:actions>
+    <.link patch={~p"/organizations/#{@organization}/inventory_pools/new"}>
+      <.button>New Inventory pool</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="inventory_pools"
+  rows={@inventory_pools}
+  row_click={&JS.navigate(~p"/organizations/#{@organization}/inventory_pools/#{&1}")}
+>
+  <:col :let={inventory_pool} label="Name"><%= inventory_pool.name %></:col>
+  <:action :let={inventory_pool}>
+    <div class="sr-only">
+      <.link navigate={~p"/organizations/#{@organization}/inventory_pools/#{inventory_pool}"}>
+        Show
+      </.link>
+    </div>
+    <.link patch={~p"/organizations/#{@organization}/inventory_pools/#{inventory_pool}/edit"}>
+      Edit
+    </.link>
+  </:action>
+  <:action :let={inventory_pool}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: inventory_pool.id})}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="inventory_pool-modal"
+  show
+  on_cancel={JS.navigate(~p"/organizations/#{@organization}/inventory_pools")}
+>
+  <.live_component
+    module={RepositoryWeb.InventoryPoolLive.FormComponent}
+    id={@inventory_pool.id || :new}
+    title={@page_title}
+    action={@live_action}
+    inventory_pool={@inventory_pool}
+    organization={@organization}
+    navigate={~p"/organizations/#{@organization}/inventory_pools"}
+  />
+</.modal>

@@ -1,0 +1,51 @@
+<.header>
+  Listing Item categories
+  <:actions>
+    <.link patch={~p"/organizations/#{@organization}/item_categories/new"}>
+      <.button>New Item category</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="item_categories"
+  rows={@item_categories}
+  row_click={&JS.navigate(~p"/organizations/#{@organization}/item_categories/#{&1}")}
+>
+  <:col :let={item_category} label="Name"><%= item_category.name %></:col>
+  <:action :let={item_category}>
+    <div class="sr-only">
+      <.link navigate={~p"/organizations/#{@organization}/item_categories/#{item_category}"}>
+        Show
+      </.link>
+    </div>
+    <.link patch={~p"/organizations/#{@organization}/item_categories/#{item_category}/edit"}>
+      Edit
+    </.link>
+  </:action>
+  <:action :let={item_category}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: item_category.id})}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="item_category-modal"
+  show
+  on_cancel={JS.navigate(~p"/organizations/#{@organization}/item_categories")}
+>
+  <.live_component
+    module={RepositoryWeb.ItemCategoryLive.FormComponent}
+    id={@item_category.id || :new}
+    title={@page_title}
+    action={@live_action}
+    item_category={@item_category}
+    organization={@organization}
+    navigate={~p"/organizations/#{@organization}/item_categories"}
+  />
+</.modal>

@@ -10,4 +10,7 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-{:ok, _organization} = Repository.Accounts.create_organization(%{name: "Wine Warehouse"})
+{:ok, organization} = Repository.Accounts.create_organization(%{name: "Wine Warehouse"})
+
+{:ok, _pool} =
+  Repository.Inventories.create_inventory_pool(organization, %{name: "Primary Stock"})

@@ -7,9 +7,12 @@
   </:actions>
 </.header>
 
-<.table id="organizations" rows={@organizations} row_click={&JS.navigate(~p"/organizations/#{&1}")}>
+<.table
+  id="organizations"
+  rows={@organizations}
+  row_click={&JS.navigate(~p"/organizations/#{&1}")}
+>
   <:col :let={organization} label="Name"><%= organization.name %></:col>
-  <:col :let={organization} label="Archived at"><%= organization.archived_at %></:col>
   <:action :let={organization}>
     <div class="sr-only">
       <.link navigate={~p"/organizations/#{organization}"}>Show</.link>
@@ -17,7 +20,10 @@
     <.link patch={~p"/organizations/#{organization}/edit"}>Edit</.link>
   </:action>
   <:action :let={organization}>
-    <.link phx-click={JS.push("delete", value: %{id: organization.id})} data-confirm="Are you sure?">
+    <.link
+      phx-click={JS.push("delete", value: %{id: organization.id})}
+      data-confirm="Are you sure?"
+    >
       Delete
     </.link>
   </:action>

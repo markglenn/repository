@@ -4,9 +4,14 @@ defmodule Repository.Accounts.Organization do
 
   use Repository.Archivable
 
+  alias Repository.Inventories.InventoryPool
+  alias Repository.Materials.ItemCategory
+
   @type t :: %__MODULE__{
           id: pos_integer(),
           name: String.t(),
+          inventory_pools: [InventoryPool.t()] | Ecto.Association.NotLoaded.t(),
+          item_categories: [ItemCategory.t()] | Ecto.Association.NotLoaded.t(),
           archived_at: NaiveDateTime.t() | nil,
           inserted_at: NaiveDateTime.t(),
           updated_at: NaiveDateTime.t()
@@ -15,6 +20,8 @@ defmodule Repository.Accounts.Organization do
   schema "organizations" do
     field :name, :string
 
+    has_many :inventory_pools, InventoryPool
+    has_many :item_categories, ItemCategory
     field :archived_at, :naive_datetime
     timestamps()
   end
