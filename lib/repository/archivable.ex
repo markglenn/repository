@@ -15,8 +15,7 @@ defmodule Repository.Archivable do
 
       @spec archive_changeset(t()) :: Ecto.Changeset.t()
       def archive_changeset(record) do
-        record
-        |> cast(%{"archived_at" => DateTime.utc_now()}, [:archived_at])
+        cast(record, %{"archived_at" => DateTime.utc_now()}, [:archived_at])
       end
     end
   end

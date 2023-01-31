@@ -5,7 +5,7 @@ defmodule Repository.Accounts.Organization do
   use Repository.Archivable
 
   alias Repository.Inventories.InventoryPool
-  alias Repository.Materials.ItemCategory
+  alias Repository.Materials.{ItemCategory, Item}
 
   @type t :: %__MODULE__{
           id: pos_integer(),
@@ -22,6 +22,7 @@ defmodule Repository.Accounts.Organization do
 
     has_many :inventory_pools, InventoryPool
     has_many :item_categories, ItemCategory
+    has_many :items, Item
     field :archived_at, :naive_datetime
     timestamps()
   end

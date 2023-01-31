@@ -14,3 +14,12 @@
 
 {:ok, _pool} =
   Repository.Inventories.create_inventory_pool(organization, %{name: "Primary Stock"})
+
+{:ok, item_category} =
+  Repository.Materials.create_item_category(organization, %{name: "Wine & Alcohol"})
+
+{:ok, item} =
+  Repository.Materials.create_item(organization, %{
+    name: "2019 Chardonnay",
+    item_category_id: item_category.id
+  })

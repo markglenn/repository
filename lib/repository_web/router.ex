@@ -46,6 +46,13 @@ defmodule RepositoryWeb.Router do
 
       live "/item_categories/:id", ItemCategoryLive.Show, :show
       live "/item_categories/:id/show/edit", ItemCategoryLive.Show, :edit
+
+      live "/items", ItemLive.Index, :index
+      live "/items/new", ItemLive.Index, :new
+      live "/items/:id/edit", ItemLive.Index, :edit
+
+      live "/items/:id", ItemLive.Show, :show
+      live "/items/:id/show/edit", ItemLive.Show, :edit
     end
 
     live_storybook("/storybook", backend_module: RepositoryWeb.Storybook)

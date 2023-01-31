@@ -1,0 +1,49 @@
+<.header>
+  Listing Items
+  <:actions>
+    <.link patch={~p"/organizations/#{@organization}/items/new"}>
+      <.button>New Item</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="items"
+  rows={@items}
+  row_click={&JS.navigate(~p"/organizations/#{@organization}/items/#{&1}")}
+>
+  <:col :let={item} label="Name"><%= item.name %></:col>
+  <:col :let={item} label="Category">
+    <.link navigate={~p"/organizations/#{@organization}/item_categories/#{item.item_category}"}>
+      <%= item.item_category.name %>
+    </.link>
+  </:col>
+  <:action :let={item}>
+    <div class="sr-only">
+      <.link navigate={~p"/organizations/#{@organization}/items/#{item}"}>Show</.link>
+    </div>
+    <.link patch={~p"/organizations/#{@organization}/items/#{item}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={item}>
+    <.link phx-click={JS.push("delete", value: %{id: item.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="item-modal"
+  show
+  on_cancel={JS.navigate(~p"/organizations/#{@organization}/items")}
+>
+  <.live_component
+    module={RepositoryWeb.ItemLive.FormComponent}
+    id={@item.id || :new}
+    title={@page_title}
+    action={@live_action}
+    item={@item}
+    organization={@organization}
+    navigate={~p"/organizations/#{@organization}/items"}
+  />
+</.modal>

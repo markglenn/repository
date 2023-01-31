@@ -10,10 +10,10 @@
   "customizations": {
     "vscode": {
       "extensions": [
-		"JakeBecker.elixir-ls",
-		"phoenixframework.phoenix",
-		"bradlc.vscode-tailwindcss"
-	]
+        "JakeBecker.elixir-ls",
+        "phoenixframework.phoenix",
+        "bradlc.vscode-tailwindcss"
+      ]
     }
   }
 }

@@ -18,4 +18,19 @@ defmodule Repository.MaterialsFixtures do
 
     item_category
   end
+
+  @doc """
+  Generate a item.
+  """
+  def item_fixture(attrs \\ %{}) do
+    {:ok, item} =
+      attrs
+      |> Enum.into(%{
+        archived_at: ~N[2023-01-30 00:58:00],
+        name: "some name"
+      })
+      |> Repository.Materials.create_item()
+
+    item
+  end
 end
