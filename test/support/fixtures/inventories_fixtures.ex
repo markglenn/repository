@@ -18,4 +18,19 @@ defmodule Repository.InventoriesFixtures do
 
     inventory_pool
   end
+
+  @doc """
+  Generate a warehouse.
+  """
+  def warehouse_fixture(attrs \\ %{}) do
+    {:ok, warehouse} =
+      attrs
+      |> Enum.into(%{
+        archived_at: ~N[2023-01-30 23:52:00],
+        name: "some name"
+      })
+      |> Repository.Inventories.create_warehouse()
+
+    warehouse
+  end
 end

@@ -1,0 +1,35 @@
+<.header>
+  Warehouse <%= @warehouse.id %>
+  <:subtitle>This is a warehouse record from your database.</:subtitle>
+  <:actions>
+    <.link
+      patch={~p"/organizations/#{@organization}/warehouses/#{@warehouse}/show/edit"}
+      phx-click={JS.push_focus()}
+    >
+      <.button>Edit warehouse</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @warehouse.name %></:item>
+</.list>
+
+<.back navigate={~p"/organizations/#{@organization}/warehouses"}>Back to warehouses</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="warehouse-modal"
+  show
+  on_cancel={JS.patch(~p"/organizations/#{@organization}/warehouses/#{@warehouse}")}
+>
+  <.live_component
+    module={RepositoryWeb.WarehouseLive.FormComponent}
+    id={@warehouse.id}
+    title={@page_title}
+    action={@live_action}
+    warehouse={@warehouse}
+    organization={@organization}
+    navigate={~p"/organizations/#{@organization}/warehouses/#{@warehouse}"}
+  />
+</.modal>

@@ -1,0 +1,44 @@
+<.header>
+  Listing Warehouses
+  <:actions>
+    <.link patch={~p"/organizations/#{@organization}/warehouses/new"}>
+      <.button>New Warehouse</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="warehouses"
+  rows={@warehouses}
+  row_click={&JS.navigate(~p"/organizations/#{@organization}/warehouses/#{&1}")}
+>
+  <:col :let={warehouse} label="Name"><%= warehouse.name %></:col>
+  <:action :let={warehouse}>
+    <div class="sr-only">
+      <.link navigate={~p"/organizations/#{@organization}/warehouses/#{warehouse}"}>Show</.link>
+    </div>
+    <.link patch={~p"/organizations/#{@organization}/warehouses/#{warehouse}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={warehouse}>
+    <.link phx-click={JS.push("delete", value: %{id: warehouse.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="warehouse-modal"
+  show
+  on_cancel={JS.navigate(~p"/organizations/#{@organization}/warehouses")}
+>
+  <.live_component
+    module={RepositoryWeb.WarehouseLive.FormComponent}
+    id={@warehouse.id || :new}
+    title={@page_title}
+    action={@live_action}
+    warehouse={@warehouse}
+    organization={@organization}
+    navigate={~p"/organizations/#{@organization}/warehouses"}
+  />
+</.modal>

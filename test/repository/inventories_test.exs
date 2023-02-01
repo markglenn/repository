@@ -58,4 +58,60 @@ defmodule Repository.InventoriesTest do
       assert %Ecto.Changeset{} = Inventories.change_inventory_pool(inventory_pool)
     end
   end
+
+  describe "warehouses" do
+    alias Repository.Inventories.Warehouse
+
+    import Repository.InventoriesFixtures
+
+    @invalid_attrs %{archived_at: nil, name: nil}
+
+    test "list_warehouses/0 returns all warehouses" do
+      warehouse = warehouse_fixture()
+      assert Inventories.list_warehouses() == [warehouse]
+    end
+
+    test "get_warehouse!/1 returns the warehouse with given id" do
+      warehouse = warehouse_fixture()
+      assert Inventories.get_warehouse!(warehouse.id) == warehouse
+    end
+
+    test "create_warehouse/1 with valid data creates a warehouse" do
+      valid_attrs = %{archived_at: ~N[2023-01-30 23:52:00], name: "some name"}
+
+      assert {:ok, %Warehouse{} = warehouse} = Inventories.create_warehouse(valid_attrs)
+      assert warehouse.archived_at == ~N[2023-01-30 23:52:00]
+      assert warehouse.name == "some name"
+    end
+
+    test "create_warehouse/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Inventories.create_warehouse(@invalid_attrs)
+    end
+
+    test "update_warehouse/2 with valid data updates the warehouse" do
+      warehouse = warehouse_fixture()
+      update_attrs = %{archived_at: ~N[2023-01-31 23:52:00], name: "some updated name"}
+
+      assert {:ok, %Warehouse{} = warehouse} = Inventories.update_warehouse(warehouse, update_attrs)
+      assert warehouse.archived_at == ~N[2023-01-31 23:52:00]
+      assert warehouse.name == "some updated name"
+    end
+
+    test "update_warehouse/2 with invalid data returns error changeset" do
+      warehouse = warehouse_fixture()
+      assert {:error, %Ecto.Changeset{}} = Inventories.update_warehouse(warehouse, @invalid_attrs)
+      assert warehouse == Inventories.get_warehouse!(warehouse.id)
+    end
+
+    test "delete_warehouse/1 deletes the warehouse" do
+      warehouse = warehouse_fixture()
+      assert {:ok, %Warehouse{}} = Inventories.delete_warehouse(warehouse)
+      assert_raise Ecto.NoResultsError, fn -> Inventories.get_warehouse!(warehouse.id) end
+    end
+
+    test "change_warehouse/1 returns a warehouse changeset" do
+      warehouse = warehouse_fixture()
+      assert %Ecto.Changeset{} = Inventories.change_warehouse(warehouse)
+    end
+  end
 end
