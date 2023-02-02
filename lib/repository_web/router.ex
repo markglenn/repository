@@ -4,16 +4,16 @@ defmodule RepositoryWeb.Router do
   import PhxLiveStorybook.Router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {RepositoryWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {RepositoryWeb.Layouts, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/" do
@@ -21,40 +21,46 @@ defmodule RepositoryWeb.Router do
   end
 
   scope "/", RepositoryWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    get "/", PageController, :home
+    get("/", PageController, :home)
 
-    live "/organizations", OrganizationLive.Index, :index
-    live "/organizations/new", OrganizationLive.Index, :new
-    live "/organizations/:id/edit", OrganizationLive.Index, :edit
-    live "/organizations/:id", OrganizationLive.Show, :show
-    live "/organizations/:id/show/edit", OrganizationLive.Show, :edit
+    live("/organizations", OrganizationLive.Index, :index)
+    live("/organizations/new", OrganizationLive.Index, :new)
+    live("/organizations/:id/edit", OrganizationLive.Index, :edit)
+    live("/organizations/:id", OrganizationLive.Show, :show)
+    live("/organizations/:id/show/edit", OrganizationLive.Show, :edit)
 
     scope "/organizations/:organization_id" do
-      live "/inventory_pools", InventoryPoolLive.Index, :index
-      live "/inventory_pools/new", InventoryPoolLive.Index, :new
-      live "/inventory_pools/:id/edit", InventoryPoolLive.Index, :edit
-      live "/inventory_pools/:id", InventoryPoolLive.Show, :show
-      live "/inventory_pools/:id/show/edit", InventoryPoolLive.Show, :edit
+      live("/inventory_pools", InventoryPoolLive.Index, :index)
+      live("/inventory_pools/new", InventoryPoolLive.Index, :new)
+      live("/inventory_pools/:id/edit", InventoryPoolLive.Index, :edit)
+      live("/inventory_pools/:id", InventoryPoolLive.Show, :show)
+      live("/inventory_pools/:id/show/edit", InventoryPoolLive.Show, :edit)
 
-      live "/item_categories", ItemCategoryLive.Index, :index
-      live "/item_categories/new", ItemCategoryLive.Index, :new
-      live "/item_categories/:id/edit", ItemCategoryLive.Index, :edit
-      live "/item_categories/:id", ItemCategoryLive.Show, :show
-      live "/item_categories/:id/show/edit", ItemCategoryLive.Show, :edit
+      live("/item_categories", ItemCategoryLive.Index, :index)
+      live("/item_categories/new", ItemCategoryLive.Index, :new)
+      live("/item_categories/:id/edit", ItemCategoryLive.Index, :edit)
+      live("/item_categories/:id", ItemCategoryLive.Show, :show)
+      live("/item_categories/:id/show/edit", ItemCategoryLive.Show, :edit)
 
-      live "/items", ItemLive.Index, :index
-      live "/items/new", ItemLive.Index, :new
-      live "/items/:id/edit", ItemLive.Index, :edit
-      live "/items/:id", ItemLive.Show, :show
-      live "/items/:id/show/edit", ItemLive.Show, :edit
+      live("/items", ItemLive.Index, :index)
+      live("/items/new", ItemLive.Index, :new)
+      live("/items/:id/edit", ItemLive.Index, :edit)
+      live("/items/:id", ItemLive.Show, :show)
+      live("/items/:id/show/edit", ItemLive.Show, :edit)
 
-      live "/warehouses", WarehouseLive.Index, :index
-      live "/warehouses/new", WarehouseLive.Index, :new
-      live "/warehouses/:id/edit", WarehouseLive.Index, :edit
-      live "/warehouses/:id", WarehouseLive.Show, :show
-      live "/warehouses/:id/show/edit", WarehouseLive.Show, :edit
+      live("/warehouses", WarehouseLive.Index, :index)
+      live("/warehouses/new", WarehouseLive.Index, :new)
+      live("/warehouses/:id/edit", WarehouseLive.Index, :edit)
+      live("/warehouses/:id", WarehouseLive.Show, :show)
+      live("/warehouses/:id/show/edit", WarehouseLive.Show, :edit)
+
+      live("/orders", OrderLive.Index, :index)
+      live("/orders/new", OrderLive.Index, :new)
+      live("/orders/:id/edit", OrderLive.Index, :edit)
+      live("/orders/:id", OrderLive.Show, :show)
+      live("/orders/:id/show/edit", OrderLive.Show, :edit)
     end
 
     live_storybook("/storybook", backend_module: RepositoryWeb.Storybook)
@@ -75,10 +81,10 @@ defmodule RepositoryWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: RepositoryWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live_dashboard("/dashboard", metrics: RepositoryWeb.Telemetry)
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 end

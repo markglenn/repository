@@ -18,11 +18,12 @@ defmodule Repository.Materials do
       [%ItemCategory{}, ...]
 
   """
-  def list_item_categories(%Organization{} = organization) do
+  def list_item_categories(%Organization{} = organization, opts \\ []) do
     ItemCategory
     |> ItemCategory.unarchived()
     |> ItemCategory.for_organization(organization)
     |> Repo.all()
+    |> with_preloads(opts)
   end
 
   @doc """
@@ -39,11 +40,12 @@ defmodule Repository.Materials do
       ** (Ecto.NoResultsError)
 
   """
-  def get_item_category!(%Organization{} = organization, id) do
+  def get_item_category!(%Organization{} = organization, id, opts \\ []) do
     ItemCategory
     |> ItemCategory.unarchived()
     |> ItemCategory.for_organization(organization)
     |> Repo.get!(id)
+    |> with_preloads(opts)
   end
 
   @doc """
@@ -116,22 +118,25 @@ defmodule Repository.Materials do
 
   alias Repository.Materials.Item
 
+  @spec list_items(Organization.t(), Keyword.t()) :: list(Item.t())
   @doc """
   Returns the list of items.
 
   ## Examples
 
-      iex> list_items()
+      iex> list_items(organization)
       [%Item{}, ...]
 
   """
-  def list_items(%Organization{} = organization) do
+  def list_items(%Organization{} = organization, opts \\ []) do
     Item
     |> Item.unarchived()
     |> Item.for_organization(organization)
     |> Repo.all()
+    |> with_preloads(opts)
   end
 
+  @spec get_item!(Organization.t(), term, Keyword.t()) :: Item.t()
   @doc """
   Gets a single item.
 
@@ -139,18 +144,19 @@ defmodule Repository.Materials do
 
   ## Examples
 
-      iex> get_item!(123)
+      iex> get_item!(organization, 123)
       %Item{}
 
-      iex> get_item!(456)
+      iex> get_item!(organization, 456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_item!(%Organization{} = organization, id) do
+  def get_item!(%Organization{} = organization, id, opts \\ []) do
     Item
     |> Item.unarchived()
     |> Item.for_organization(organization)
     |> Repo.get!(id)
+    |> with_preloads(opts)
   end
 
   @doc """
@@ -190,6 +196,7 @@ defmodule Repository.Materials do
     |> Repo.update()
   end
 
+  @spec delete_item(Item.t()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   @doc """
   Deletes a item.
 
@@ -203,7 +210,9 @@ defmodule Repository.Materials do
 
   """
   def delete_item(%Item{} = item) do
-    Repo.delete(item)
+    item
+    |> Item.archive_changeset()
+    |> Repo.update()
   end
 
   @doc """
@@ -217,5 +226,12 @@ defmodule Repository.Materials do
   """
   def change_item(%Item{} = item, attrs \\ %{}) do
     Item.changeset(item, attrs)
+  end
+
+  @spec with_preloads(term, Keyword.t()) :: term
+  defp with_preloads(results, opts) do
+    opts
+    |> Keyword.get_values(:preload)
+    |> Enum.reduce(results, &Repo.preload(&2, &1))
   end
 end

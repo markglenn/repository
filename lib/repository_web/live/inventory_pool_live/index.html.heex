@@ -13,6 +13,11 @@
   row_click={&JS.navigate(~p"/organizations/#{@organization}/inventory_pools/#{&1}")}
 >
   <:col :let={inventory_pool} label="Name"><%= inventory_pool.name %></:col>
+  <:col :let={inventory_pool} label="Warehouse">
+    <.link navigate={~p"/organizations/#{@organization}/warehouses/#{inventory_pool.warehouse}"}>
+      <%= inventory_pool.warehouse.name %>
+    </.link>
+  </:col>
   <:action :let={inventory_pool}>
     <div class="sr-only">
       <.link navigate={~p"/organizations/#{@organization}/inventory_pools/#{inventory_pool}"}>

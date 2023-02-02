@@ -1,0 +1,45 @@
+<.header>
+  Listing Orders
+  <:actions>
+    <.link patch={~p"/organizations/#{@organization}/orders/new"}>
+      <.button>New Order</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="orders"
+  rows={@orders}
+  row_click={&JS.navigate(~p"/organizations/#{@organization}/orders/#{&1}")}
+>
+  <:col :let={order} label="Reference"><%= order.reference_id %></:col>
+  <:col :let={order} label="Fulfilled at"><%= order.fulfilled_at %></:col>
+  <:action :let={order}>
+    <div class="sr-only">
+      <.link navigate={~p"/organizations/#{@organization}/orders/#{order}"}>Show</.link>
+    </div>
+    <.link patch={~p"/organizations/#{@organization}/orders/#{order}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={order}>
+    <.link phx-click={JS.push("delete", value: %{id: order.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="order-modal"
+  show
+  on_cancel={JS.navigate(~p"/organizations/#{@organization}/orders")}
+>
+  <.live_component
+    module={RepositoryWeb.OrderLive.FormComponent}
+    id={@order.id || :new}
+    title={@page_title}
+    action={@live_action}
+    order={@order}
+    organization={@organization}
+    navigate={~p"/organizations/#{@organization}/orders"}
+  />
+</.modal>

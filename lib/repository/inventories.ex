@@ -9,22 +9,25 @@ defmodule Repository.Inventories do
   alias Repository.Accounts.Organization
   alias Repository.Inventories.InventoryPool
 
+  @spec list_inventory_pools(Organization.t(), Keyword.t()) :: list(InventoryPool.t())
   @doc """
   Returns the list of inventory_pools.
 
   ## Examples
 
-      iex> list_inventory_pools()
+      iex> list_inventory_pools(organization)
       [%InventoryPool{}, ...]
 
   """
-  def list_inventory_pools(%Organization{} = organization) do
+  def list_inventory_pools(%Organization{} = organization, opts \\ []) do
     InventoryPool
     |> InventoryPool.unarchived()
     |> InventoryPool.for_organization(organization)
     |> Repo.all()
+    |> with_preloads(opts)
   end
 
+  @spec get_inventory_pool!(Organization.t(), term, Keyword.t()) :: InventoryPool.t()
   @doc """
   Gets a single inventory_pool.
 
@@ -32,18 +35,19 @@ defmodule Repository.Inventories do
 
   ## Examples
 
-      iex> get_inventory_pool!(123)
+      iex> get_inventory_pool!(organization, 123)
       %InventoryPool{}
 
-      iex> get_inventory_pool!(456)
+      iex> get_inventory_pool!(organization, 456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_inventory_pool!(%Organization{} = organization, id) do
+  def get_inventory_pool!(%Organization{} = organization, id, opts \\ []) do
     InventoryPool
     |> InventoryPool.unarchived()
     |> InventoryPool.for_organization(organization)
     |> Repo.get!(id)
+    |> with_preloads(opts)
   end
 
   @doc """
@@ -219,5 +223,12 @@ defmodule Repository.Inventories do
   """
   def change_warehouse(%Warehouse{} = warehouse, attrs \\ %{}) do
     Warehouse.changeset(warehouse, attrs)
+  end
+
+  @spec with_preloads(term, Keyword.t()) :: term
+  defp with_preloads(results, opts) do
+    opts
+    |> Keyword.get_values(:preload)
+    |> Enum.reduce(results, &Repo.preload(&2, &1))
   end
 end

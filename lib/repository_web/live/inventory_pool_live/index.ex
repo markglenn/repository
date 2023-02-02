@@ -47,7 +47,6 @@ defmodule RepositoryWeb.InventoryPoolLive.Index do
     {:noreply, assign(socket, :inventory_pools, list_inventory_pools(organization))}
   end
 
-  defp list_inventory_pools(organization) do
-    Inventories.list_inventory_pools(organization)
-  end
+  defp list_inventory_pools(organization),
+    do: Inventories.list_inventory_pools(organization, preload: :warehouse)
 end

@@ -1,6 +1,7 @@
 defmodule RepositoryWeb.InventoryPoolLive.FormComponent do
   use RepositoryWeb, :live_component
 
+  alias Repository.Accounts.Organization
   alias Repository.Inventories
 
   @impl true
@@ -21,6 +22,7 @@ defmodule RepositoryWeb.InventoryPoolLive.FormComponent do
         phx-submit="save"
       >
         <.input field={{f, :name}} type="text" label="Name" />
+        <.input field={{f, :warehouse_id}} type="select" label="Category" options={@warehouses} />
         <:actions>
           <.button phx-disable-with="Saving...">Save Inventory pool</.button>
         </:actions>
@@ -36,7 +38,8 @@ defmodule RepositoryWeb.InventoryPoolLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(:changeset, changeset)
+     |> assign(:warehouses, warehouse_options(assigns.organization))}
   end
 
   @impl true
@@ -77,5 +80,11 @@ defmodule RepositoryWeb.InventoryPoolLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  defp warehouse_options(%Organization{} = organization) do
+    organization
+    |> Inventories.list_warehouses()
+    |> Enum.map(fn warehouse -> {warehouse.name, warehouse.id} end)
   end
 end

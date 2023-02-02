@@ -13,10 +13,14 @@ defmodule RepositoryWeb.InventoryPoolLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    inventory_pool =
+      socket.assigns.organization
+      |> Inventories.get_inventory_pool!(id, preload: :warehouse)
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:inventory_pool, Inventories.get_inventory_pool!(socket.assigns.organization, id))}
+     |> assign(:inventory_pool, inventory_pool)}
   end
 
   defp page_title(:show), do: "Show Inventory pool"

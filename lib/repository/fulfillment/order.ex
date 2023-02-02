@@ -1,39 +1,38 @@
-defmodule Repository.Inventories.InventoryPool do
+defmodule Repository.Fulfillment.Order do
   use Ecto.Schema
   import Ecto.Changeset
 
   use Repository.Archivable
 
   alias Repository.Accounts.Organization
-  alias Repository.Inventories.Warehouse
 
   @type t :: %__MODULE__{
-          name: String.t(),
+          id: pos_integer(),
           organization: Organization.t() | Ecto.Association.NotLoaded.t(),
-          warehouse: Warehouse.t() | Ecto.Association.NotLoaded.t(),
           organization_id: pos_integer(),
-          warehouse_id: pos_integer(),
+          reference_id: String.t(),
           archived_at: NaiveDateTime.t() | nil,
+          fulfilled_at: NaiveDateTime.t() | nil,
           inserted_at: NaiveDateTime.t(),
           updated_at: NaiveDateTime.t()
         }
 
-  schema "inventory_pools" do
-    field(:archived_at, :naive_datetime)
-    field(:name, :string)
+  schema "orders" do
     belongs_to(:organization, Organization)
-    belongs_to(:warehouse, Warehouse)
+    field(:reference_id, :string)
+
+    field(:archived_at, :naive_datetime)
+    field(:fulfilled_at, :naive_datetime)
 
     timestamps()
   end
 
   @doc false
-  def changeset(inventory_pool, attrs) do
-    inventory_pool
-    |> cast(attrs, [:name, :warehouse_id])
-    |> validate_required([:name, :warehouse_id])
-    |> foreign_key_constraint(:organization_id)
-    |> foreign_key_constraint(:warehouse_id)
+  def changeset(order, attrs) do
+    order
+    |> cast(attrs, [:reference_id, :fulfilled_at])
+    |> validate_required([:reference_id])
+    |> foreign_key_constraint(:organization)
   end
 
   @spec for_organization(Ecto.Queryable.t(), Organization.t()) :: Ecto.Query.t()

@@ -4,6 +4,7 @@ defmodule Repository.Accounts.Organization do
 
   use Repository.Archivable
 
+  alias Repository.Fulfillment.Order
   alias Repository.Inventories.{InventoryPool, Warehouse}
   alias Repository.Materials.{ItemCategory, Item}
 
@@ -12,6 +13,7 @@ defmodule Repository.Accounts.Organization do
           name: String.t(),
           inventory_pools: [InventoryPool.t()] | Ecto.Association.NotLoaded.t(),
           item_categories: [ItemCategory.t()] | Ecto.Association.NotLoaded.t(),
+          orders: [Order.t()] | Ecto.Association.NotLoaded.t(),
           warehouses: [Warehouse.t()] | Ecto.Association.NotLoaded.t(),
           archived_at: NaiveDateTime.t() | nil,
           inserted_at: NaiveDateTime.t(),
@@ -25,6 +27,7 @@ defmodule Repository.Accounts.Organization do
     has_many(:item_categories, ItemCategory)
     has_many(:items, Item)
     has_many(:warehouses, Warehouse)
+    has_many(:orders, Order)
 
     field(:archived_at, :naive_datetime)
     timestamps()

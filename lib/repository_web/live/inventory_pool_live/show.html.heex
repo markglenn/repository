@@ -13,6 +13,11 @@
 
 <.list>
   <:item title="Name"><%= @inventory_pool.name %></:item>
+  <:item title="Warehouse">
+    <.link navigate={~p"/organizations/#{@organization}/warehouses/#{@inventory_pool.warehouse}"}>
+      <%= @inventory_pool.warehouse.name %>
+    </.link>
+  </:item>
 </.list>
 
 <.back navigate={~p"/organizations/#{@organization}/inventory_pools"}>

@@ -12,8 +12,14 @@
 
 {:ok, organization} = Repository.Accounts.create_organization(%{name: "Wine Warehouse"})
 
+{:ok, warehouse} =
+  Repository.Inventories.create_warehouse(organization, %{name: "Gurnee Warehouse"})
+
 {:ok, _pool} =
-  Repository.Inventories.create_inventory_pool(organization, %{name: "Primary Stock"})
+  Repository.Inventories.create_inventory_pool(organization, %{
+    name: "Primary Stock",
+    warehouse_id: warehouse.id
+  })
 
 {:ok, item_category} =
   Repository.Materials.create_item_category(organization, %{name: "Wine & Alcohol"})
@@ -23,6 +29,3 @@
     name: "2019 Chardonnay",
     item_category_id: item_category.id
   })
-
-{:ok, _warehouse} =
-  Repository.Inventories.create_warehouse(organization, %{name: "Gurnee Warehouse"})
