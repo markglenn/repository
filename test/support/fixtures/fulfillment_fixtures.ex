@@ -19,4 +19,19 @@ defmodule Repository.FulfillmentFixtures do
 
     order
   end
+
+  @doc """
+  Generate a order_line.
+  """
+  def order_line_fixture(attrs \\ %{}) do
+    {:ok, order_line} =
+      attrs
+      |> Enum.into(%{
+        quantity: "120.5",
+        reference_id: "some reference_id"
+      })
+      |> Repository.Fulfillment.create_order_line()
+
+    order_line
+  end
 end

@@ -1,0 +1,43 @@
+<.header>
+  Order line <%= @order_line.id %>
+  <:subtitle>This is a order_line record from your database.</:subtitle>
+  <:actions>
+    <.link
+      patch={
+        ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/show/edit"
+      }
+      phx-click={JS.push_focus()}
+    >
+      <.button>Edit order_line</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Reference"><%= @order_line.reference_id %></:item>
+  <:item title="Quantity"><%= @order_line.quantity %></:item>
+</.list>
+
+<.back navigate={~p"/organizations/#{@organization}/orders/#{@order}/order_lines"}>
+  Back to order_lines
+</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="order_line-modal"
+  show
+  on_cancel={
+    JS.patch(~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}")
+  }
+>
+  <.live_component
+    module={RepositoryWeb.OrderLineLive.FormComponent}
+    id={@order_line.id}
+    title={@page_title}
+    action={@live_action}
+    order_line={@order_line}
+    organization={@organization}
+    order={@order}
+    navigate={~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}"}
+  />
+</.modal>

@@ -61,6 +61,14 @@ defmodule RepositoryWeb.Router do
       live("/orders/:id/edit", OrderLive.Index, :edit)
       live("/orders/:id", OrderLive.Show, :show)
       live("/orders/:id/show/edit", OrderLive.Show, :edit)
+
+      scope "/orders/:order_id" do
+        live "/order_lines", OrderLineLive.Index, :index
+        live "/order_lines/new", OrderLineLive.Index, :new
+        live "/order_lines/:id/edit", OrderLineLive.Index, :edit
+        live "/order_lines/:id", OrderLineLive.Show, :show
+        live "/order_lines/:id/show/edit", OrderLineLive.Show, :edit
+      end
     end
 
     live_storybook("/storybook", backend_module: RepositoryWeb.Storybook)

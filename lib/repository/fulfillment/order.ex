@@ -32,7 +32,7 @@ defmodule Repository.Fulfillment.Order do
     order
     |> cast(attrs, [:reference_id, :fulfilled_at])
     |> validate_required([:reference_id])
-    |> foreign_key_constraint(:organization)
+    |> foreign_key_constraint(:organization_id)
   end
 
   @spec for_organization(Ecto.Queryable.t(), Organization.t()) :: Ecto.Query.t()
