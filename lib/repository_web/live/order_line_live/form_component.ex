@@ -27,7 +27,13 @@ defmodule RepositoryWeb.OrderLineLive.FormComponent do
         <.input field={{f, :reference_id}} type="text" label="Reference" />
         <.input field={{f, :quantity}} type="number" label="Quantity" step="any" />
         <.input field={{f, :item_id}} type="select" label="Item" options={@items} />
-        <.input field={{f, :inventory_pool_id}} type="select" label="Inventory Pool" options={@inventory_pools} />
+        <.input
+          field={{f, :inventory_pool_id}}
+          type="select"
+          label="Inventory Pool"
+          prompt=""
+          options={@inventory_pools}
+        />
         <:actions>
           <.button phx-disable-with="Saving...">Save Order line</.button>
         </:actions>

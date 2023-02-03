@@ -5,12 +5,14 @@ defmodule Repository.Fulfillment.Order do
   use Repository.Archivable
 
   alias Repository.Accounts.Organization
+  alias Repository.Fulfillment.OrderLine
 
   @type t :: %__MODULE__{
           id: pos_integer(),
           organization: Organization.t() | Ecto.Association.NotLoaded.t(),
           organization_id: pos_integer(),
           reference_id: String.t(),
+          order_lines: [OrderLine.t()] | Ecto.Association.NotLoaded.t(),
           archived_at: NaiveDateTime.t() | nil,
           fulfilled_at: NaiveDateTime.t() | nil,
           inserted_at: NaiveDateTime.t(),
@@ -19,6 +21,7 @@ defmodule Repository.Fulfillment.Order do
 
   schema "orders" do
     belongs_to(:organization, Organization)
+    has_many(:order_lines, OrderLine)
     field(:reference_id, :string)
 
     field(:archived_at, :naive_datetime)

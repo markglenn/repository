@@ -51,6 +51,6 @@ defmodule RepositoryWeb.OrderLineLive.Index do
   end
 
   defp list_order_lines(%Order{} = order) do
-    Fulfillment.list_order_lines(order)
+    Fulfillment.list_order_lines(order, preload: [:item, :inventory_pool])
   end
 end

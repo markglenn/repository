@@ -20,7 +20,10 @@ defmodule RepositoryWeb.OrderLineLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:order_line, Fulfillment.get_order_line!(socket.assigns.order, id))}
+     |> assign(
+       :order_line,
+       Fulfillment.get_order_line!(socket.assigns.order, id, preload: [:item, :inventory_pool])
+     )}
   end
 
   defp page_title(:show), do: "Show Order line"

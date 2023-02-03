@@ -14,6 +14,22 @@
 </.header>
 
 <.list>
+  <:item title="Item">
+    <.link navigate={~p"/organizations/#{@organization}/items/#{@order_line.item}"}>
+      <%= @order_line.item.name %>
+    </.link>
+  </:item>
+
+  <:item title="Inventory Pool">
+    <%= if @order_line.inventory_pool do %>
+      <.link navigate={
+        ~p"/organizations/#{@organization}/inventory_pools/#{@order_line.inventory_pool}"
+      }>
+        <%= @order_line.inventory_pool.name %>
+      </.link>
+    <% end %>
+  </:item>
+
   <:item title="Reference"><%= @order_line.reference_id %></:item>
   <:item title="Quantity"><%= @order_line.quantity %></:item>
 </.list>

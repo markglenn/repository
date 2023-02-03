@@ -1,5 +1,8 @@
 <.header>
-  Listing Order lines
+  <.link navigate={~p"/organizations/#{@organization}/orders/#{@order}"}>
+    Order <%= @order.id %>
+  </.link>
+  Lines
   <:actions>
     <.link patch={~p"/organizations/#{@organization}/orders/#{@order}/order_lines/new"}>
       <.button>New Order line</.button>
@@ -12,8 +15,23 @@
   rows={@order_lines}
   row_click={&JS.navigate(~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{&1}")}
 >
+  <:col :let={order_line} label="Item">
+    <.link navigate={~p"/organizations/#{@organization}/items/#{order_line.item}"}>
+      <%= order_line.item.name %>
+    </.link>
+  </:col>
+  <:col :let={order_line} label="Inventory Pool">
+    <%= if order_line.inventory_pool do %>
+      <.link navigate={
+        ~p"/organizations/#{@organization}/inventory_pools/#{order_line.inventory_pool}"
+      }>
+        <%= order_line.inventory_pool.name %>
+      </.link>
+    <% end %>
+  </:col>
   <:col :let={order_line} label="Reference"><%= order_line.reference_id %></:col>
   <:col :let={order_line} label="Quantity"><%= order_line.quantity %></:col>
+  <:col :let={_order_line} label="Allocations">0</:col>
   <:action :let={order_line}>
     <div class="sr-only">
       <.link navigate={

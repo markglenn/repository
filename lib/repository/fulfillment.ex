@@ -125,11 +125,12 @@ defmodule Repository.Fulfillment do
       [%OrderLine{}, ...]
 
   """
-  def list_order_lines(%Order{} = order) do
+  def list_order_lines(%Order{} = order, opts \\ []) do
     order
     |> OrderLine.for_order()
     |> OrderLine.unarchived()
     |> Repo.all()
+    |> with_preloads(opts)
   end
 
   @doc """
@@ -146,11 +147,12 @@ defmodule Repository.Fulfillment do
       ** (Ecto.NoResultsError)
 
   """
-  def get_order_line!(%Order{} = order, id) do
+  def get_order_line!(%Order{} = order, id, opts \\ []) do
     order
     |> OrderLine.for_order()
     |> OrderLine.unarchived()
     |> Repo.get!(id)
+    |> with_preloads(opts)
   end
 
   @doc """
@@ -219,5 +221,12 @@ defmodule Repository.Fulfillment do
   """
   def change_order_line(%OrderLine{} = order_line, attrs \\ %{}) do
     OrderLine.changeset(order_line, attrs)
+  end
+
+  @spec with_preloads(term, Keyword.t()) :: term
+  defp with_preloads(results, opts) do
+    opts
+    |> Keyword.get_values(:preload)
+    |> Enum.reduce(results, &Repo.preload(&2, &1))
   end
 end
