@@ -34,4 +34,18 @@ defmodule Repository.FulfillmentFixtures do
 
     order_line
   end
+
+  @doc """
+  Generate a allocation.
+  """
+  def allocation_fixture(attrs \\ %{}) do
+    {:ok, allocation} =
+      attrs
+      |> Enum.into(%{
+        quantity: "120.5"
+      })
+      |> Repository.Fulfillment.create_allocation()
+
+    allocation
+  end
 end

@@ -4,7 +4,7 @@ defmodule Repository.Fulfillment.OrderLine do
 
   use Repository.Archivable
 
-  alias Repository.Fulfillment.Order
+  alias Repository.Fulfillment.{Allocation, Order}
   alias Repository.Inventories.InventoryPool
   alias Repository.Materials.Item
 
@@ -16,6 +16,7 @@ defmodule Repository.Fulfillment.OrderLine do
           item_id: pos_integer(),
           inventory_pool: InventoryPool.t() | nil | Ecto.Association.NotLoaded.t(),
           inventory_pool_id: pos_integer() | nil,
+          allocations: [Allocation.t()] | Ecto.Association.NotLoaded.t(),
           archived_at: NaiveDateTime.t() | nil,
           inserted_at: NaiveDateTime.t(),
           updated_at: NaiveDateTime.t()
@@ -27,6 +28,8 @@ defmodule Repository.Fulfillment.OrderLine do
     belongs_to(:order, Order)
     belongs_to(:item, Item)
     belongs_to(:inventory_pool, InventoryPool)
+
+    has_many(:allocations, Allocation)
 
     field(:archived_at, :naive_datetime)
     timestamps()

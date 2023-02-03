@@ -68,6 +68,14 @@ defmodule RepositoryWeb.Router do
         live "/order_lines/:id/edit", OrderLineLive.Index, :edit
         live "/order_lines/:id", OrderLineLive.Show, :show
         live "/order_lines/:id/show/edit", OrderLineLive.Show, :edit
+
+        scope "/order_lines/:order_line_id" do
+          live "/allocations", AllocationLive.Index, :index
+          live "/allocations/new", AllocationLive.Index, :new
+          live "/allocations/:id/edit", AllocationLive.Index, :edit
+          live "/allocations/:id", AllocationLive.Show, :show
+          live "/allocations/:id/show/edit", AllocationLive.Show, :edit
+        end
       end
     end
 

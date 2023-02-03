@@ -1,0 +1,47 @@
+<.header>
+  Allocation <%= @allocation.id %>
+  <:subtitle>This is a allocation record from your database.</:subtitle>
+  <:actions>
+    <.link
+      patch={
+        ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations/#{@allocation}/show/edit"
+      }
+      phx-click={JS.push_focus()}
+    >
+      <.button>Edit allocation</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Quantity"><%= @allocation.quantity %></:item>
+</.list>
+
+<.back navigate={
+  ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations"
+}>
+  Back to allocations
+</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="allocation-modal"
+  show
+  on_cancel={
+    JS.patch(
+      ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations/#{@allocation}"
+    )
+  }
+>
+  <.live_component
+    module={RepositoryWeb.AllocationLive.FormComponent}
+    id={@allocation.id}
+    title={@page_title}
+    action={@live_action}
+    allocation={@allocation}
+    order_line={@order_line}
+    navigate={
+      ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations/#{@allocation}"
+    }
+  />
+</.modal>

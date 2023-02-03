@@ -1,0 +1,64 @@
+<.header>
+  Listing Allocations
+  <:actions>
+    <.link patch={
+      ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations/new"
+    }>
+      <.button>New Allocation</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="allocations"
+  rows={@allocations}
+  row_click={
+    &JS.navigate(
+      ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations/#{&1}"
+    )
+  }
+>
+  <:col :let={allocation} label="Quantity"><%= allocation.quantity %></:col>
+  <:action :let={allocation}>
+    <div class="sr-only">
+      <.link navigate={
+        ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations/#{allocation}"
+      }>
+        Show
+      </.link>
+    </div>
+    <.link patch={
+      ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations/#{allocation}/edit"
+    }>
+      Edit
+    </.link>
+  </:action>
+  <:action :let={allocation}>
+    <.link phx-click={JS.push("delete", value: %{id: allocation.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="allocation-modal"
+  show
+  on_cancel={
+    JS.navigate(
+      ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations"
+    )
+  }
+>
+  <.live_component
+    module={RepositoryWeb.AllocationLive.FormComponent}
+    id={@allocation.id || :new}
+    title={@page_title}
+    action={@live_action}
+    allocation={@allocation}
+    order_line={@order_line}
+    navigate={
+      ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations"
+    }
+  />
+</.modal>

@@ -116,4 +116,58 @@ defmodule Repository.FulfillmentTest do
       assert %Ecto.Changeset{} = Fulfillment.change_order_line(order_line)
     end
   end
+
+  describe "allocations" do
+    alias Repository.Fulfillment.Allocation
+
+    import Repository.FulfillmentFixtures
+
+    @invalid_attrs %{quantity: nil}
+
+    test "list_allocations/0 returns all allocations" do
+      allocation = allocation_fixture()
+      assert Fulfillment.list_allocations() == [allocation]
+    end
+
+    test "get_allocation!/1 returns the allocation with given id" do
+      allocation = allocation_fixture()
+      assert Fulfillment.get_allocation!(allocation.id) == allocation
+    end
+
+    test "create_allocation/1 with valid data creates a allocation" do
+      valid_attrs = %{quantity: "120.5"}
+
+      assert {:ok, %Allocation{} = allocation} = Fulfillment.create_allocation(valid_attrs)
+      assert allocation.quantity == Decimal.new("120.5")
+    end
+
+    test "create_allocation/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Fulfillment.create_allocation(@invalid_attrs)
+    end
+
+    test "update_allocation/2 with valid data updates the allocation" do
+      allocation = allocation_fixture()
+      update_attrs = %{quantity: "456.7"}
+
+      assert {:ok, %Allocation{} = allocation} = Fulfillment.update_allocation(allocation, update_attrs)
+      assert allocation.quantity == Decimal.new("456.7")
+    end
+
+    test "update_allocation/2 with invalid data returns error changeset" do
+      allocation = allocation_fixture()
+      assert {:error, %Ecto.Changeset{}} = Fulfillment.update_allocation(allocation, @invalid_attrs)
+      assert allocation == Fulfillment.get_allocation!(allocation.id)
+    end
+
+    test "delete_allocation/1 deletes the allocation" do
+      allocation = allocation_fixture()
+      assert {:ok, %Allocation{}} = Fulfillment.delete_allocation(allocation)
+      assert_raise Ecto.NoResultsError, fn -> Fulfillment.get_allocation!(allocation.id) end
+    end
+
+    test "change_allocation/1 returns a allocation changeset" do
+      allocation = allocation_fixture()
+      assert %Ecto.Changeset{} = Fulfillment.change_allocation(allocation)
+    end
+  end
 end

@@ -121,7 +121,7 @@ defmodule Repository.Fulfillment do
 
   ## Examples
 
-      iex> list_order_lines()
+      iex> list_order_lines(order)
       [%OrderLine{}, ...]
 
   """
@@ -140,10 +140,10 @@ defmodule Repository.Fulfillment do
 
   ## Examples
 
-      iex> get_order_line!(123)
+      iex> get_order_line!(order, 123)
       %OrderLine{}
 
-      iex> get_order_line!(456)
+      iex> get_order_line!(order, 456)
       ** (Ecto.NoResultsError)
 
   """
@@ -160,10 +160,10 @@ defmodule Repository.Fulfillment do
 
   ## Examples
 
-      iex> create_order_line(%{field: value})
+      iex> create_order_line(order, %{field: value})
       {:ok, %OrderLine{}}
 
-      iex> create_order_line(%{field: bad_value})
+      iex> create_order_line(order, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
@@ -228,5 +228,119 @@ defmodule Repository.Fulfillment do
     opts
     |> Keyword.get_values(:preload)
     |> Enum.reduce(results, &Repo.preload(&2, &1))
+  end
+
+  alias Repository.Fulfillment.Allocation
+
+  @doc """
+  Returns the list of allocations.
+
+  ## Examples
+
+      iex> list_allocations(order_line)
+      [%Allocation{}, ...]
+
+  """
+  def list_allocations(%OrderLine{} = order_line) do
+    Allocation
+    |> Allocation.unarchived()
+    |> Allocation.for_order_line(order_line)
+    |> Repo.all()
+  end
+
+  def list_allocations(%Order{} = order) do
+    Allocation
+    |> Allocation.unarchived()
+    |> Allocation.for_order(order)
+    |> Repo.all()
+  end
+
+  @doc """
+  Gets a single allocation.
+
+  Raises `Ecto.NoResultsError` if the Allocation does not exist.
+
+  ## Examples
+
+      iex> get_allocation!(123)
+      %Allocation{}
+
+      iex> get_allocation!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_allocation!(%OrderLine{} = order_line, id) do
+    Allocation
+    |> Allocation.unarchived()
+    |> Allocation.for_order_line(order_line)
+    |> Repo.get!(id)
+  end
+
+  @doc """
+  Creates a allocation.
+
+  ## Examples
+
+      iex> create_allocation(%{field: value})
+      {:ok, %Allocation{}}
+
+      iex> create_allocation(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_allocation(%OrderLine{} = order_line, attrs \\ %{}) do
+    order_line
+    |> Ecto.build_assoc(:allocations)
+    |> Allocation.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a allocation.
+
+  ## Examples
+
+      iex> update_allocation(allocation, %{field: new_value})
+      {:ok, %Allocation{}}
+
+      iex> update_allocation(allocation, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_allocation(%Allocation{} = allocation, attrs) do
+    allocation
+    |> Allocation.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a allocation.
+
+  ## Examples
+
+      iex> delete_allocation(allocation)
+      {:ok, %Allocation{}}
+
+      iex> delete_allocation(allocation)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_allocation(%Allocation{} = allocation) do
+    allocation
+    |> Allocation.archive_changeset()
+    |> Repo.update()
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking allocation changes.
+
+  ## Examples
+
+      iex> change_allocation(allocation)
+      %Ecto.Changeset{data: %Allocation{}}
+
+  """
+  def change_allocation(%Allocation{} = allocation, attrs \\ %{}) do
+    Allocation.changeset(allocation, attrs)
   end
 end

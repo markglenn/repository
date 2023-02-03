@@ -24,8 +24,13 @@
 {:ok, item_category} =
   Repository.Materials.create_item_category(organization, %{name: "Wine & Alcohol"})
 
-{:ok, _item} =
+{:ok, item} =
   Repository.Materials.create_item(organization, %{
     name: "2019 Chardonnay",
     item_category_id: item_category.id
   })
+
+{:ok, order} = Repository.Fulfillment.create_order(organization, %{reference_id: "ORD-123"})
+
+{:ok, _order_line} =
+  Repository.Fulfillment.create_order_line(order, %{item_id: item.id, quantity: 12})
