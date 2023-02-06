@@ -7,4 +7,4 @@ RUN apt install -y nodejs postgresql-client inotify-tools
 RUN mix local.rebar --force \
  && mix local.hex --force
 
- WORKDIR /workspace
+WORKDIR /workspace
