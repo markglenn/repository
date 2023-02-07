@@ -14,7 +14,25 @@
 </.header>
 
 <.list>
+  <:item title="Order">
+    <.link navigate={~p"/organizations/#{@organization}/orders/#{@order}"}>
+      Order <%= @order.id %>
+    </.link>
+  </:item>
+
+  <:item title="Item">
+    <.link navigate={~p"/organizations/#{@organization}/items/#{@allocation.order_line.item}"}>
+      <%= @allocation.order_line.item.name %>
+    </.link>
+  </:item>
   <:item title="Quantity"><%= @allocation.quantity %></:item>
+  <:item title="Inventory Pool">
+    <.link navigate={
+      ~p"/organizations/#{@organization}/inventory_pools/#{@allocation.inventory_pool}"
+    }>
+      <%= @allocation.inventory_pool.name %>
+    </.link>
+  </:item>
 </.list>
 
 <.back navigate={
@@ -39,6 +57,7 @@
     title={@page_title}
     action={@live_action}
     allocation={@allocation}
+    organization={@organization}
     order_line={@order_line}
     navigate={
       ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations/#{@allocation}"

@@ -7,8 +7,9 @@ defmodule Repository.Fulfillment do
   alias Repository.Repo
 
   alias Repository.Accounts.Organization
-  alias Repository.Fulfillment.Order
+  alias Repository.Fulfillment.{Allocation, Order}
 
+  @spec list_orders(Organization.t(), Keyword.t()) :: list(Order.t())
   @doc """
   Returns the list of orders.
 
@@ -18,13 +19,15 @@ defmodule Repository.Fulfillment do
       [%Order{}, ...]
 
   """
-  def list_orders(%Organization{} = organization) do
+  def list_orders(%Organization{} = organization, opts \\ []) do
     Order
     |> Order.unarchived()
     |> Order.for_organization(organization)
     |> Repo.all()
+    |> Repo.with_preloads(opts)
   end
 
+  @spec get_order!(Organization.t(), term, Keyword.t()) :: Order.t()
   @doc """
   Gets a single order.
 
@@ -39,13 +42,16 @@ defmodule Repository.Fulfillment do
       ** (Ecto.NoResultsError)
 
   """
-  def get_order!(%Organization{} = organization, id) do
+  def get_order!(%Organization{} = organization, id, opts \\ []) do
     Order
     |> Order.unarchived()
     |> Order.for_organization(organization)
     |> Repo.get!(id)
+    |> Repo.with_preloads(opts)
   end
 
+  @spec create_order(Organization.t(), :invalid | map()) ::
+          {:ok, Order.t()} | {:error, Ecto.Changeset.t()}
   @doc """
   Creates a order.
 
@@ -65,6 +71,8 @@ defmodule Repository.Fulfillment do
     |> Repo.insert()
   end
 
+  @spec update_order(Order.t(), :invalid | map()) ::
+          {:ok, Order.t()} | {:error, Ecto.Changeset.t()}
   @doc """
   Updates a order.
 
@@ -83,6 +91,7 @@ defmodule Repository.Fulfillment do
     |> Repo.update()
   end
 
+  @spec delete_order(Order.t()) :: {:ok, Order.t()} | {:error, Ecto.Changeset.t()}
   @doc """
   Deletes a order.
 
@@ -101,6 +110,7 @@ defmodule Repository.Fulfillment do
     |> Repo.update()
   end
 
+  @spec change_order(Order.t(), :invalid | map()) :: Ecto.Changeset.t()
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking order changes.
 
@@ -116,6 +126,7 @@ defmodule Repository.Fulfillment do
 
   alias Repository.Fulfillment.OrderLine
 
+  @spec list_order_lines(Order.t(), Keyword.t()) :: list(OrderLine.t())
   @doc """
   Returns the list of order_lines.
 
@@ -130,9 +141,10 @@ defmodule Repository.Fulfillment do
     |> OrderLine.for_order()
     |> OrderLine.unarchived()
     |> Repo.all()
-    |> with_preloads(opts)
+    |> Repo.with_preloads(opts)
   end
 
+  @spec get_order_line!(Order.t(), term(), Keyword.t()) :: OrderLine.t()
   @doc """
   Gets a single order_line.
 
@@ -152,9 +164,11 @@ defmodule Repository.Fulfillment do
     |> OrderLine.for_order()
     |> OrderLine.unarchived()
     |> Repo.get!(id)
-    |> with_preloads(opts)
+    |> Repo.with_preloads(opts)
   end
 
+  @spec create_order_line(Order.t(), :invalid | map()) ::
+          {:ok, OrderLine.t()} | {:error, Ecto.Changeset.t()}
   @doc """
   Creates a order_line.
 
@@ -174,6 +188,8 @@ defmodule Repository.Fulfillment do
     |> Repo.insert()
   end
 
+  @spec update_order_line(OrderLine.t(), :invalid | map()) ::
+          {:ok, OrderLine.t()} | {:error, Ecto.Changeset.t()}
   @doc """
   Updates a order_line.
 
@@ -192,6 +208,7 @@ defmodule Repository.Fulfillment do
     |> Repo.update()
   end
 
+  @spec delete_order_line(OrderLine.t()) :: {:ok, OrderLine.t()} | {:error, Ecto.Changeset.t()}
   @doc """
   Deletes a order_line.
 
@@ -210,6 +227,7 @@ defmodule Repository.Fulfillment do
     |> Repo.update()
   end
 
+  @spec change_order_line(OrderLine.t(), :invalid | map()) :: Ecto.Changeset.t()
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking order_line changes.
 
@@ -223,15 +241,7 @@ defmodule Repository.Fulfillment do
     OrderLine.changeset(order_line, attrs)
   end
 
-  @spec with_preloads(term, Keyword.t()) :: term
-  defp with_preloads(results, opts) do
-    opts
-    |> Keyword.get_values(:preload)
-    |> Enum.reduce(results, &Repo.preload(&2, &1))
-  end
-
-  alias Repository.Fulfillment.Allocation
-
+  @spec list_allocations(OrderLine.t() | Order.t(), Keyword.t() | nil) :: list(Allocation.t())
   @doc """
   Returns the list of allocations.
 
@@ -241,20 +251,25 @@ defmodule Repository.Fulfillment do
       [%Allocation{}, ...]
 
   """
-  def list_allocations(%OrderLine{} = order_line) do
+  def list_allocations(order_line_or_order, opts \\ [])
+
+  def list_allocations(%OrderLine{} = order_line, opts) do
     Allocation
     |> Allocation.unarchived()
     |> Allocation.for_order_line(order_line)
     |> Repo.all()
+    |> Repo.with_preloads(opts)
   end
 
-  def list_allocations(%Order{} = order) do
+  def list_allocations(%Order{} = order, opts) do
     Allocation
     |> Allocation.unarchived()
     |> Allocation.for_order(order)
     |> Repo.all()
+    |> Repo.with_preloads(opts)
   end
 
+  @spec get_allocation!(OrderLine.t(), term, keyword | nil) :: Allocation.t()
   @doc """
   Gets a single allocation.
 
@@ -269,13 +284,16 @@ defmodule Repository.Fulfillment do
       ** (Ecto.NoResultsError)
 
   """
-  def get_allocation!(%OrderLine{} = order_line, id) do
+  def get_allocation!(%OrderLine{} = order_line, id, opts \\ []) do
     Allocation
     |> Allocation.unarchived()
     |> Allocation.for_order_line(order_line)
     |> Repo.get!(id)
+    |> Repo.with_preloads(opts)
   end
 
+  @spec create_allocation(OrderLine.t(), :invalid | map()) ::
+          {:ok, Allocation.t()} | {:error, Ecto.Changeset.t()}
   @doc """
   Creates a allocation.
 
@@ -295,6 +313,8 @@ defmodule Repository.Fulfillment do
     |> Repo.insert()
   end
 
+  @spec update_allocation(Allocation.t(), :invalid | map()) ::
+          {:ok, Allocation.t()} | {:error, Ecto.Changeset.t()}
   @doc """
   Updates a allocation.
 
@@ -313,6 +333,7 @@ defmodule Repository.Fulfillment do
     |> Repo.update()
   end
 
+  @spec delete_allocation(Allocation.t()) :: {:ok, Allocation.t()} | {:error, Ecto.Changeset.t()}
   @doc """
   Deletes a allocation.
 
@@ -331,6 +352,7 @@ defmodule Repository.Fulfillment do
     |> Repo.update()
   end
 
+  @spec change_allocation(Allocation.t(), :invalid | map()) :: Ecto.Changeset.t()
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking allocation changes.
 

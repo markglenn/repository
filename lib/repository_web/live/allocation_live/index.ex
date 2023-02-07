@@ -10,7 +10,7 @@ defmodule RepositoryWeb.AllocationLive.Index do
   def mount(params, _session, socket) do
     organization = Accounts.get_organization!(params["organization_id"])
     order = Fulfillment.get_order!(organization, params["order_id"])
-    order_line = Fulfillment.get_order_line!(order, params["order_line_id"])
+    order_line = Fulfillment.get_order_line!(order, params["order_line_id"], preload: [:item])
 
     {:ok,
      socket
@@ -52,6 +52,6 @@ defmodule RepositoryWeb.AllocationLive.Index do
   end
 
   defp list_allocations(%OrderLine{} = order_line) do
-    Fulfillment.list_allocations(order_line)
+    Fulfillment.list_allocations(order_line, preload: [:inventory_pool, order_line: [:item]])
   end
 end

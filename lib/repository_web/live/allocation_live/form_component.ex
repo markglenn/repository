@@ -1,7 +1,9 @@
 defmodule RepositoryWeb.AllocationLive.FormComponent do
   use RepositoryWeb, :live_component
 
+  alias Repository.Accounts.Organization
   alias Repository.Fulfillment
+  alias Repository.Inventories
 
   @impl true
   def render(assigns) do
@@ -21,6 +23,12 @@ defmodule RepositoryWeb.AllocationLive.FormComponent do
         phx-submit="save"
       >
         <.input field={{f, :quantity}} type="number" label="Quantity" step="any" />
+        <.input
+          field={{f, :inventory_pool_id}}
+          type="select"
+          label="Inventory Pool"
+          options={@inventory_pools}
+        />
         <:actions>
           <.button phx-disable-with="Saving...">Save Allocation</.button>
         </:actions>
@@ -36,7 +44,8 @@ defmodule RepositoryWeb.AllocationLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(:changeset, changeset)
+     |> assign(:inventory_pools, inventory_pool_options(assigns.organization))}
   end
 
   @impl true
@@ -77,5 +86,11 @@ defmodule RepositoryWeb.AllocationLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  defp inventory_pool_options(%Organization{} = organization) do
+    organization
+    |> Inventories.list_inventory_pools()
+    |> Enum.map(&{&1.name, &1.id})
   end
 end

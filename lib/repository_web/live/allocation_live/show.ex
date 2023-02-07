@@ -23,7 +23,12 @@ defmodule RepositoryWeb.AllocationLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:allocation, Fulfillment.get_allocation!(socket.assigns.order_line, id))}
+     |> assign(
+       :allocation,
+       Fulfillment.get_allocation!(socket.assigns.order_line, id,
+         preload: [:inventory_pool, order_line: [:item]]
+       )
+     )}
   end
 
   defp page_title(:show), do: "Show Allocation"

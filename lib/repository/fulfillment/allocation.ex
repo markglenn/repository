@@ -31,8 +31,8 @@ defmodule Repository.Fulfillment.Allocation do
   @doc false
   def changeset(allocation, attrs) do
     allocation
-    |> cast(attrs, [:quantity])
-    |> validate_required([:quantity])
+    |> cast(attrs, [:quantity, :inventory_pool_id])
+    |> validate_required([:quantity, :inventory_pool_id])
   end
 
   @spec for_order_line(Ecto.Queryable.t(), OrderLine.t()) :: Ecto.Query.t()

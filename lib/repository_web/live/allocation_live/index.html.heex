@@ -18,7 +18,26 @@
     )
   }
 >
+  <:col label="Order">
+    <.link navigate={~p"/organizations/#{@organization}/orders/#{@order}"}>
+      Order <%= @order.id %>
+    </.link>
+  </:col>
+
+  <:col label="Item">
+    <.link navigate={~p"/organizations/#{@organization}/items/#{@order_line.item}"}>
+      <%= @order_line.item.name %>
+    </.link>
+  </:col>
+
   <:col :let={allocation} label="Quantity"><%= allocation.quantity %></:col>
+  <:col :let={allocation} label="Inventory Pool">
+    <.link navigate={
+      ~p"/organizations/#{@organization}/inventory_pools/#{allocation.inventory_pool}"
+    }>
+      <%= allocation.inventory_pool.name %>
+    </.link>
+  </:col>
   <:action :let={allocation}>
     <div class="sr-only">
       <.link navigate={
@@ -56,6 +75,7 @@
     title={@page_title}
     action={@live_action}
     allocation={@allocation}
+    organization={@organization}
     order_line={@order_line}
     navigate={
       ~p"/organizations/#{@organization}/orders/#{@order}/order_lines/#{@order_line}/allocations"
