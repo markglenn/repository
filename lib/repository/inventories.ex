@@ -100,9 +100,7 @@ defmodule Repository.Inventories do
 
   """
   def delete_inventory_pool(%InventoryPool{} = inventory_pool) do
-    inventory_pool
-    |> InventoryPool.archive_changeset()
-    |> Repo.update()
+    Repo.archive(inventory_pool)
   end
 
   @doc """
@@ -207,9 +205,7 @@ defmodule Repository.Inventories do
 
   """
   def delete_warehouse(%Warehouse{} = warehouse) do
-    warehouse
-    |> Warehouse.archive_changeset()
-    |> Repo.update()
+    Repo.archive(warehouse)
   end
 
   @doc """

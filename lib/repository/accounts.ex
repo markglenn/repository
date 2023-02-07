@@ -86,9 +86,7 @@ defmodule Repository.Accounts do
 
   """
   def delete_organization(%Organization{} = organization) do
-    organization
-    |> Organization.archive_changeset()
-    |> Repo.update()
+    Repo.archive(organization)
   end
 
   @doc """

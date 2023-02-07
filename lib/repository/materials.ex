@@ -98,9 +98,7 @@ defmodule Repository.Materials do
 
   """
   def delete_item_category(%ItemCategory{} = item_category) do
-    item_category
-    |> ItemCategory.archive_changeset()
-    |> Repo.update()
+    Repo.archive(item_category)
   end
 
   @doc """
@@ -210,9 +208,7 @@ defmodule Repository.Materials do
 
   """
   def delete_item(%Item{} = item) do
-    item
-    |> Item.archive_changeset()
-    |> Repo.update()
+    Repo.archive(item)
   end
 
   @doc """

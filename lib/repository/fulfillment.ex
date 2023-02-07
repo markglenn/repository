@@ -105,9 +105,7 @@ defmodule Repository.Fulfillment do
 
   """
   def delete_order(%Order{} = order) do
-    order
-    |> Order.archive_changeset()
-    |> Repo.update()
+    Repo.archive(order)
   end
 
   @spec change_order(Order.t(), :invalid | map()) :: Ecto.Changeset.t()
@@ -222,9 +220,7 @@ defmodule Repository.Fulfillment do
 
   """
   def delete_order_line(%OrderLine{} = order_line) do
-    order_line
-    |> OrderLine.archive_changeset()
-    |> Repo.update()
+    Repo.archive(order_line)
   end
 
   @spec change_order_line(OrderLine.t(), :invalid | map()) :: Ecto.Changeset.t()
@@ -347,9 +343,7 @@ defmodule Repository.Fulfillment do
 
   """
   def delete_allocation(%Allocation{} = allocation) do
-    allocation
-    |> Allocation.archive_changeset()
-    |> Repo.update()
+    Repo.archive(allocation)
   end
 
   @spec change_allocation(Allocation.t(), :invalid | map()) :: Ecto.Changeset.t()
